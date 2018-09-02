@@ -1,3 +1,4 @@
+import { loadAndSortTowns as loadTowns } from './index';
 /*
  Страница должна предварительно загрузить список городов из
  https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json
@@ -36,8 +37,7 @@ const homeworkContainer = document.querySelector('#homework-container');
  Массив городов пожно получить отправив асинхронный запрос по адресу
  https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json
  */
-function loadTowns() {
-}
+/*
 
 /*
  Функция должна проверять встречается ли подстрока chunk в строке full
@@ -51,6 +51,15 @@ function loadTowns() {
    isMatching('Moscow', 'Moscov') // false
  */
 function isMatching(full, chunk) {
+    full = full.toLowerCase();
+    chunk = chunk.toLowerCase();
+
+    if (~full.indexOf(chunk)) {
+
+        return true;
+    }
+
+    return false;
 }
 
 /* Блок с надписью "Загрузка" */
@@ -62,9 +71,42 @@ const filterInput = homeworkContainer.querySelector('#filter-input');
 /* Блок с результатами поиска */
 const filterResult = homeworkContainer.querySelector('#filter-result');
 
-filterInput.addEventListener('keyup', function() {
-    // это обработчик нажатия кливиш в текстовом поле
-});
+loadTowns()
+    .then(towns => {
+        loadingBlock.style.display = 'none';
+        filterBlock.style.display = 'initial';
+
+        return towns;
+    })
+    .then((towns) => {
+
+        filterInput.addEventListener('keyup', function() {
+
+            while (filterResult.firstChild) {
+                filterResult.removeChild(filterResult.firstChild);
+            }
+
+            let chunk = filterInput.value;
+
+            if (chunk !== '') {
+
+                for (let city of towns) {
+                    const match = isMatching(city.name, chunk);
+
+                    if (match) {
+                        const element = document.createElement('div');
+                        
+                        element.innerText = city.name;
+                        filterResult.appendChild(element);
+                    }
+                }
+            }
+        });
+
+    })
+    .catch(() => {
+        // still nothing here
+    });
 
 export {
     loadTowns,
