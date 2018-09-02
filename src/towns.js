@@ -72,7 +72,7 @@ const filterInput = homeworkContainer.querySelector('#filter-input');
 const filterResult = homeworkContainer.querySelector('#filter-result');
 
 loadTowns()
-    .then(towns => {
+    .then((towns) => {
         loadingBlock.style.display = 'none';
         filterBlock.style.display = 'initial';
 
@@ -95,7 +95,7 @@ loadTowns()
 
                     if (match) {
                         const element = document.createElement('div');
-                        
+
                         element.innerText = city.name;
                         filterResult.appendChild(element);
                     }
@@ -105,7 +105,28 @@ loadTowns()
 
     })
     .catch(() => {
-        // still nothing here
+        loadingBlock.style.display = 'none';
+        filterBlock.style.display = 'none';
+    });
+
+let townsPromise = loadTowns();
+
+townsPromise
+    .catch(() => {
+        const errorElement = document.createElement('div');
+
+        errorElement.innerText = 'Не удалось загрузить города';
+
+        const errorButton = document.createElement('button');
+
+        errorButton.innerText = 'Повторить';
+
+        homeworkContainer.appendChild(errorElement);
+        homeworkContainer.appendChild(errorButton);
+
+        errorButton.addEventListener('click', function() {
+            loadTowns();
+        });
     });
 
 export {
