@@ -1,0 +1,14 @@
+{{#each items}}
+  <div class="wrapper friend" friendId={{ id }} draggable="true">
+    <div class="friendPhoto">
+      <img src="{{ photo_50 }}" class="friendPhoto" alt="{{ first_name }} {{ last_name }}" draggable="false">      
+    </div>  
+    <div class="friendInfo">
+      {{ first_name }} {{ last_name }} 
+    </div>
+    <div class="friendShuffle">
++
+    </div>
+  </div> 
+{{/each}}
+
