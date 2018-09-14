@@ -1,9 +1,9 @@
 const setStorage = function(storage, storageName) {   
-    localStorage[storageName] = JSON.stringify(storage);
+    sessionStorage[storageName] = JSON.stringify(storage);
 };
 
 const getStorage = function(storageName) {
-    let contents = JSON.parse(localStorage[storageName]);
+    let contents = JSON.parse(sessionStorage[storageName]);
 
     return contents;
 };
@@ -18,8 +18,8 @@ const updateStorage = function(item, donor) {
         shift = ['sourceBlock', 'targetBlock'];
     }
 
-    let donorBlock = JSON.parse(localStorage[shift[0]]);
-    let acceptorBlock = JSON.parse(localStorage[shift[1]]);
+    let donorBlock = JSON.parse(sessionStorage[shift[0]]);
+    let acceptorBlock = JSON.parse(sessionStorage[shift[1]]);
 
     for (let key in donorBlock) {
         if (donorBlock[key].id == elem) {
@@ -29,8 +29,8 @@ const updateStorage = function(item, donor) {
         } 
     } 
 
-    localStorage[shift[0]] = JSON.stringify(donorBlock.filter(n => n));
-    localStorage[shift[1]] = JSON.stringify(acceptorBlock.filter(n => n));
+    sessionStorage[shift[0]] = JSON.stringify(donorBlock.filter(n => n));
+    sessionStorage[shift[1]] = JSON.stringify(acceptorBlock.filter(n => n));
 };
 
 export { setStorage, getStorage, updateStorage };

@@ -1,17 +1,17 @@
 import './style/style.css';
 import { callAPI, auth } from './js/auth';
 import render from './templates/friends.hbs';
-import { setStorage, getStorage, updateStorage } from './js/storage';
+import { setStorage, getStorage } from './js/storage';
 
 import { dnd } from './js/dnd';
 import { shuffle } from './js/shuffle';
 import { search, filterFriends } from './js/search';
 
-const container = document.querySelector('.container');
 const source = document.querySelector('.source');
 const target = document.querySelector('.target');
 const sourceSearch = document.querySelector('.sourceSearch');
 const targetSearch = document.querySelector('.targetSearch');
+const saveButton = document.querySelector('.button');
 const zones = [source, target];
 
 const friends = auth()
@@ -31,13 +31,21 @@ const friends = auth()
         const friendsInfo = friends.items;
 
         // инициализируем левый блок - если пуст, заполняем списком друзей 
-        if (!localStorage['sourceBlock']) {
+        if (!localStorage['sourceBlock'] && !sessionStorage['sourceBlock']) {
+            setStorage(friendsInfo, 'sourceBlock');
+        } else {
+            sessionStorage['sourceBlock'] = localStorage['sourceBlock'];
             setStorage(friendsInfo, 'sourceBlock');
         }
 
         if (!localStorage['targetBlock']) {
             setStorage([], 'targetBlock');
-        } 
+        } else if (!sessionStorage['targetBlock']) {
+            sessionStorage['targetBlock'] = localStorage['targetBlock'];
+            setStorage(JSON.parse(sessionStorage['targetBlock']), 'targetBlock');
+        } else {
+            setStorage(JSON.parse(sessionStorage['targetBlock']), 'targetBlock');
+        }
 
         let sourceBlock = getStorage('sourceBlock');
         let targetBlock = getStorage('targetBlock');
@@ -52,4 +60,9 @@ dnd(zones);
 
 shuffle(zones);
 
-filterFriends([sourceSearch, targetSearch]);
+filterFriends(zones);
+
+saveButton.addEventListener('click', () => {
+    localStorage['sourceBlock'] = sessionStorage['sourceBlock'];
+    localStorage['targetBlock'] = sessionStorage['targetBlock'];
+})

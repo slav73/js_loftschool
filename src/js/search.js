@@ -1,5 +1,4 @@
 import render from '../templates/friends.hbs';
-import getStorage from './storage';
 export { search, filterFriends };
 
 function search(full, chunk) {
@@ -19,18 +18,29 @@ function filterFriends(zones) {
 
     zones.forEach(zone => {
         addEventListener('keyup', (e) => {
+
             currentZone = { source: zone, node: e.target, block: e.target.id };
+            console.log(currentZone.block);
             let donorBlock;
             let zoneField;
-            let zoneClass = '.' + currentZone.block;
+            let zoneClass;
+            let zoneName;
+
+            if (currentZone.block === "target") {
+                zoneClass = '.target';
+                zoneName = 'targetBlock';
+            } else {
+                zoneClass = '.source';
+                zoneName = 'sourceBlock';
+            }
+
             let chunk = currentZone.node.value;
-            let zoneName = currentZone.block + 'Block';
+             
 
             if (currentZone.source.classList.contains('sourceSearch')) {
                 zoneField = document.querySelector(zoneClass);
-                donorBlock = JSON.parse(localStorage[zoneName]);
+                donorBlock = JSON.parse(sessionStorage[zoneName]);
                 
-             
                 if (chunk !== '') {
                     let searchFields = [];
 
@@ -47,7 +57,7 @@ function filterFriends(zones) {
 
                     zoneField.innerHTML = render({ items: searchFields });
                 }    
-            } 
-        });        
+            }   
+        });
     });    
 }
