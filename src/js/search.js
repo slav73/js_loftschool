@@ -2,14 +2,15 @@ import render from '../templates/friends.hbs';
 export { search, filterFriends };
 
 function search(full, chunk) {
-    full = full.toLowerCase();
-    chunk = chunk.toLowerCase();
+    if (chunk) {
+        full = full.toLowerCase();
+        chunk = chunk.toLowerCase();
 
-    if (~full.indexOf(chunk)) {
+        if (~full.indexOf(chunk)) {
 
-        return true;
-    }
-
+            return true;
+        }
+    }    
     return false;
 }
 
@@ -19,27 +20,29 @@ function filterFriends(zones) {
     zones.forEach(zone => {
         addEventListener('keyup', (e) => {
 
-            currentZone = { source: zone, node: e.target, block: e.target.id };
-            console.log(currentZone.block);
+            currentZone = { source: zone, node: e.target };
             let donorBlock;
             let zoneField;
             let zoneClass;
-            let zoneName;
+            let zoneName = e.target.id;
 
-            if (currentZone.block === "target") {
+            if (zoneName === 'targeter') {
+                zoneField = 'target';
                 zoneClass = '.target';
-                zoneName = 'targetBlock';
             } else {
+                zoneField = 'source';
                 zoneClass = '.source';
-                zoneName = 'sourceBlock';
             }
 
             let chunk = currentZone.node.value;
-             
 
-            if (currentZone.source.classList.contains('sourceSearch')) {
+            console.log(zoneName);
+           
+            if (zone.classList.contains(zoneField)) {
+
                 zoneField = document.querySelector(zoneClass);
-                donorBlock = JSON.parse(sessionStorage[zoneName]);
+                console.log(zoneField);
+                donorBlock = JSON.parse(sessionStorage[zoneField]);
                 
                 if (chunk !== '') {
                     let searchFields = [];
@@ -56,7 +59,9 @@ function filterFriends(zones) {
                     console.log(zoneField);
 
                     zoneField.innerHTML = render({ items: searchFields });
-                }    
+                } else {
+//                    zoneField.innerHTML = render({ items: searchFields });
+                }   
             }   
         });
     });    

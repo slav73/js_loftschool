@@ -13,6 +13,7 @@ const sourceSearch = document.querySelector('.sourceSearch');
 const targetSearch = document.querySelector('.targetSearch');
 const saveButton = document.querySelector('.button');
 const zones = [source, target];
+console.log(zones);
 
 const friends = auth()
     .then(() => {
@@ -29,27 +30,27 @@ const friends = auth()
     .then((friends) => {
         // получили данные о друзьях
         const friendsInfo = friends.items;
-
+console.log(zones);
         // инициализируем левый блок - если пуст, заполняем списком друзей 
-        if (!localStorage['sourceBlock'] && !sessionStorage['sourceBlock']) {
-            setStorage(friendsInfo, 'sourceBlock');
+        if (!localStorage['source'] && !sessionStorage['source']) {
+            setStorage(friendsInfo, 'source');
         } else {
-            sessionStorage['sourceBlock'] = localStorage['sourceBlock'];
-            setStorage(friendsInfo, 'sourceBlock');
+            sessionStorage['source'] = localStorage['source'];
+            setStorage(friendsInfo, 'source');
         }
 
-        if (!localStorage['targetBlock']) {
-            setStorage([], 'targetBlock');
-        } else if (!sessionStorage['targetBlock']) {
-            sessionStorage['targetBlock'] = localStorage['targetBlock'];
-            setStorage(JSON.parse(sessionStorage['targetBlock']), 'targetBlock');
+        if (!localStorage['target']) {
+            setStorage([], 'target');
+        } else if (!sessionStorage['target']) {
+            sessionStorage['target'] = localStorage['target'];
+            setStorage(JSON.parse(sessionStorage['target']), 'target');
         } else {
-            setStorage(JSON.parse(sessionStorage['targetBlock']), 'targetBlock');
+            setStorage(JSON.parse(sessionStorage['target']), 'target');
         }
 
-        let sourceBlock = getStorage('sourceBlock');
-        let targetBlock = getStorage('targetBlock');
-        
+        let sourceBlock = getStorage('source');
+        let targetBlock = getStorage('target');
+
         source.innerHTML = render({ items: sourceBlock });
         target.innerHTML = render({ items: targetBlock });
 
@@ -63,6 +64,6 @@ shuffle(zones);
 filterFriends(zones);
 
 saveButton.addEventListener('click', () => {
-    localStorage['sourceBlock'] = sessionStorage['sourceBlock'];
-    localStorage['targetBlock'] = sessionStorage['targetBlock'];
+    localStorage['source'] = sessionStorage['source'];
+    localStorage['target'] = sessionStorage['target'];
 })

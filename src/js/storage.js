@@ -13,9 +13,9 @@ const updateStorage = function(item, donor) {
     let elem = item.getAttribute('friendId');
     
     if (donor.classList.contains('source')) {
-        shift = ['targetBlock', 'sourceBlock'];
+        shift = ['target', 'source'];
     } else {
-        shift = ['sourceBlock', 'targetBlock'];
+        shift = ['source', 'target'];
     }
 
     let donorBlock = JSON.parse(sessionStorage[shift[0]]);
