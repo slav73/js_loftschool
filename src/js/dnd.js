@@ -21,7 +21,6 @@ function dnd(zones) {
                     let friendId = currentDrag.node.getAttribute('friendId');
                     let zoneId = zone.getAttribute('id');
                     let block = JSON.parse(sessionStorage['friends']);
-
                     
                     for (let key in block) {
                         if (block[key].id == friendId) {
