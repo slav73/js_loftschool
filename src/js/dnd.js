@@ -18,21 +18,24 @@ function dnd(zones) {
                 e.preventDefault();
 
                 if (currentDrag.source !== zone) { 
-                    let friendId = currentDrag.node.getAttribute('friendId');
                     let zoneId = zone.getAttribute('id');
-                    let block = JSON.parse(sessionStorage['friends']);
-                    
-                    for (let key in block) {
-                        if (block[key].id == friendId) {
-                            block[key].block = zoneId;
-                            
-                            (zoneId === 'target')? block[key].selected = true: block[key].selected = false;                        
-                        } 
-                    } 
-        
-                    sessionStorage['friends'] = JSON.stringify(block.filter(n => n));  
-                    zone.appendChild(currentDrag.node);
+                    if (zoneId === 'target') {
+                        let friendId = currentDrag.node.getAttribute('friendId');                        
+                        let block = JSON.parse(sessionStorage['friends']);
+                        
+                        for (let key in block) {
+                            if (block[key].id == friendId) {
+                                block[key].block = zoneId;                            
+                                block[key].selected = true; 
 
+                                let shuffleId = currentDrag.node.lastElementChild;
+                                shuffleId.innerHTML = 'x';                      
+                            } 
+                            
+                        } 
+                        sessionStorage['friends'] = JSON.stringify(block.filter(n => n));  
+                        zone.appendChild(currentDrag.node);
+                    }
                 }
 
                 currentDrag = null;
