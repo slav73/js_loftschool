@@ -23,24 +23,29 @@ function filterFriends(zones) {
             currentZone = { source: zone, node: e.target };
             let zoneName = zone.getAttribute('id');
             let chunk = currentZone.node.value;
-           
-            let block = JSON.parse(sessionStorage['friends']);
+
+            if (currentZone.node.parentNode.classList.contains(zoneName)) {
+                    
+                let block = JSON.parse(sessionStorage['friends']);
+                
+                if (chunk !== '') {
+
+                    for (let key in block) {
+                        if (block.hasOwnProperty(key) && block[key].block == zoneName) {   
+                            const match = search(block[key].first_name, chunk) || search(block[key].last_name, chunk);
             
-            if (chunk !== '') {
-
-                for (let key in block) {
-                    if (block.hasOwnProperty(key) && block[key].block == zoneName) {   
-console.log(block[key].block, e.target);
-                        const match = search(block[key].first_name, chunk) || search(block[key].last_name, chunk);
-        
-                        if (match) {
-                            block[key].visible = true;
+                            if (match) {
+                                block[key].visible = true;
+                            }
                         }
-                    }
-                }   
+                    }   
 
-                zone.innerHTML = render({ items: block.filter(friend => friend.visible) });
-            } 
+                    zone.innerHTML = render({ items: block.filter(friend => friend.visible) });
+                } else {
+                    zone.innerHTML = render({ items: block.filter(friend => friend.block == zoneName)});
+
+                }
+            }
         });
     });    
 }

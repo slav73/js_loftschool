@@ -26,8 +26,7 @@ function dnd(zones) {
                         if (block[key].id == friendId) {
                             block[key].block = zoneId;
                             
-//                            (zoneId === 'target')? e.target.innerHTML = 'x': e.target.innerHTML = '+'; 
-
+                            (zoneId === 'target')? block[key].selected = true: block[key].selected = false;                        
                         } 
                     } 
         

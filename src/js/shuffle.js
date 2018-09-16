@@ -9,11 +9,14 @@ function shuffle(zones) {
             if (shuffleId) {
                 let zoneId = zone.getAttribute('id');
                 let zoneDest;
+                let icon;
 
                 if (zoneId === 'source') {
                     zoneDest = 'target';
+                    icon = 'x';
                 } else {
                     zoneDest = 'source';
+                    icon = '+';
                 }
 
                 let zoneDestNode = document.getElementById(zoneDest);
@@ -21,11 +24,11 @@ function shuffle(zones) {
 
                 for (let key in block) {
                     if (block[key].id == shuffleId) {
-                        block[key].block = zoneDest;
-                        (zoneDest === 'target')? e.target.innerHTML = 'x': e.target.innerHTML = '+';                        
+                        block[key].block = zoneDest;                        
+                        (zoneDest === 'target')? block[key].selected = true: block[key].selected = false;                        
                     } 
                 } 
-
+                e.target.innerHTML = icon;
                 zoneDestNode.appendChild(e.target.parentNode);
                 sessionStorage['friends'] = JSON.stringify(block.filter(n => n));        
             }
