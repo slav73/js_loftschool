@@ -1,34 +1,37 @@
-import { updateStorage } from "./storage";
+function shuffle(zones) {
 
-function shuffle() {
-    let currentClick;
+    zones.forEach(zone => {
 
-    document.addEventListener('click', (e) => {
-        if (e.target.classList.contains('friendShuffle')) {
-            let donor;
-            let donorBlock;
-            let acceptor;
+        zone.addEventListener('click', (e) => {
 
-            if (e.target.parentNode.parentNode.classList.contains('source')) {
-                donor = 'source';
-                donorBlock = document.querySelector('.source');
-                acceptor = document.querySelector('.target');
-            } else {
-                donor = 'target';
-                donorBlock = document.querySelector('.source');
-                acceptor = document.querySelector('.source');
+            let shuffleId = e.target.getAttribute('shuffleId');
+
+            if (shuffleId) {
+                let zoneId = zone.getAttribute('id');
+                let zoneDest;
+
+                if (zoneId === 'source') {
+                    zoneDest = 'target';
+                } else {
+                    zoneDest = 'source';
+                }
+
+                let zoneDestNode = document.getElementById(zoneDest);
+                let block = JSON.parse(sessionStorage['friends']);
+
+                for (let key in block) {
+                    if (block[key].id == shuffleId) {
+                        block[key].block = zoneDest;
+                        (zoneDest === 'target')? e.target.innerHTML = 'x': e.target.innerHTML = '+';                        
+                    } 
+                } 
+
+                zoneDestNode.appendChild(e.target.parentNode);
+                sessionStorage['friends'] = JSON.stringify(block.filter(n => n));        
             }
-            
-            currentClick = { source: donor, node: e.target };
-
-            updateStorage(currentClick.node.parentNode, acceptor);
-
-            acceptor.insertBefore(currentClick.node.parentNode, donor.lastElementChild);
-
-            currentClick = null;
-        }
-    });
-    
+        });
+    });  
+        
 }
 
 export { shuffle };

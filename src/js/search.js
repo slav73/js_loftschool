@@ -21,48 +21,26 @@ function filterFriends(zones) {
         addEventListener('keyup', (e) => {
 
             currentZone = { source: zone, node: e.target };
-            let donorBlock;
-            let zoneField;
-            let zoneClass;
-            let zoneName = e.target.id;
-
-            if (zoneName === 'targeter') {
-                zoneField = 'target';
-                zoneClass = '.target';
-            } else {
-                zoneField = 'source';
-                zoneClass = '.source';
-            }
-
+            let zoneName = zone.getAttribute('id');
             let chunk = currentZone.node.value;
-
-            console.log(zoneName);
            
-            if (zone.classList.contains(zoneField)) {
-
-                zoneField = document.querySelector(zoneClass);
-                console.log(zoneField);
-                donorBlock = JSON.parse(sessionStorage[zoneField]);
-                
-                if (chunk !== '') {
-                    let searchFields = [];
-
-                    for (let key in donorBlock) {
-                        if (donorBlock.hasOwnProperty(key)) {            
-                            const match = search(donorBlock[key].first_name, chunk) || search(donorBlock[key].last_name, chunk);
+            let block = JSON.parse(sessionStorage['friends']);
             
-                            if (match) {
-                                searchFields.push(donorBlock[key]);
-                            }
-                        }
-                    }   
-                    console.log(zoneField);
+            if (chunk !== '') {
 
-                    zoneField.innerHTML = render({ items: searchFields });
-                } else {
-//                    zoneField.innerHTML = render({ items: searchFields });
+                for (let key in block) {
+                    if (block.hasOwnProperty(key) && block[key].block == zoneName) {   
+console.log(block[key].block, e.target);
+                        const match = search(block[key].first_name, chunk) || search(block[key].last_name, chunk);
+        
+                        if (match) {
+                            block[key].visible = true;
+                        }
+                    }
                 }   
-            }   
+
+                zone.innerHTML = render({ items: block.filter(friend => friend.visible) });
+            } 
         });
     });    
 }

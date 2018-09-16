@@ -7,13 +7,11 @@ import { dnd } from './js/dnd';
 import { shuffle } from './js/shuffle';
 import { search, filterFriends } from './js/search';
 
-const source = document.querySelector('.source');
-const target = document.querySelector('.target');
-const sourceSearch = document.querySelector('.sourceSearch');
-const targetSearch = document.querySelector('.targetSearch');
+const source = document.getElementById('source');
+const target = document.getElementById('target');
+
 const saveButton = document.querySelector('.button');
 const zones = [source, target];
-console.log(zones);
 
 const friends = auth()
     .then(() => {
@@ -29,32 +27,39 @@ const friends = auth()
     })
     .then((friends) => {
         // получили данные о друзьях
-        const friendsInfo = friends.items;
-console.log(zones);
+        const friendsInfo = [];
+        
+        // выставляем флаги основной таблицы и видимости в таблицах
+        for (let key of friends.items) {
+            let friend = {
+                id: key.id,
+                first_name: key.first_name,
+                last_name: key.last_name,
+                city: key.city,
+                country: key.country,
+                photo_50: key.photo_50,
+                selected: false,
+                visible: false,
+                block: 'source'
+            };
+
+            friendsInfo.push(friend);
+        }
+
         // инициализируем левый блок - если пуст, заполняем списком друзей 
-        if (!localStorage['source'] && !sessionStorage['source']) {
-            setStorage(friendsInfo, 'source');
+        if (!localStorage['friends']) {
+            source.innerHTML = render({ items: friendsInfo.filter(friend => !friend.selected) });
+            // инициализируем сессионную переменную со списком друзей
+            sessionStorage['friends'] = JSON.stringify(friendsInfo);
         } else {
-            sessionStorage['source'] = localStorage['source'];
-            setStorage(friendsInfo, 'source');
+            let block = JSON.parse(localStorage['friends']);
+
+            source.innerHTML = render({ items: block.filter(friend => friend.block == 'source') });
+            target.innerHTML = render({ items: block.filter(friend => friend.block == 'target') });
+            sessionStorage['friends'] = localStorage['friends'];
         }
 
-        if (!localStorage['target']) {
-            setStorage([], 'target');
-        } else if (!sessionStorage['target']) {
-            sessionStorage['target'] = localStorage['target'];
-            setStorage(JSON.parse(sessionStorage['target']), 'target');
-        } else {
-            setStorage(JSON.parse(sessionStorage['target']), 'target');
-        }
 
-        let sourceBlock = getStorage('source');
-        let targetBlock = getStorage('target');
-
-        source.innerHTML = render({ items: sourceBlock });
-        target.innerHTML = render({ items: targetBlock });
-
-        return friendsInfo;
     });
 
 dnd(zones);
@@ -63,7 +68,23 @@ shuffle(zones);
 
 filterFriends(zones);
 
+const updateStorage = function(elem, acceptor) {
+    if (sessionStorage['friends']) {
+
+        let block = JSON.parse(sessionStorage['friends']);
+
+        for (let key in block) {
+            if (block[key].id == elem) {
+                block[key].block = acceptor;
+                (acceptor === 'target')? block[key].selected = true: block[key].selected = false;
+            } 
+        } 
+    
+    }
+
+    sessionStorage['friends'] = JSON.stringify(block.filter(n => n));
+};
+
 saveButton.addEventListener('click', () => {
-    localStorage['source'] = sessionStorage['source'];
-    localStorage['target'] = sessionStorage['target'];
-})
+    localStorage['friends'] = sessionStorage['friends'];
+});

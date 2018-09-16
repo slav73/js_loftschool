@@ -8,29 +8,4 @@ const getStorage = function(storageName) {
     return contents;
 };
 
-const updateStorage = function(item, donor) {
-    let shift;
-    let elem = item.getAttribute('friendId');
-    
-    if (donor.classList.contains('source')) {
-        shift = ['target', 'source'];
-    } else {
-        shift = ['source', 'target'];
-    }
-
-    let donorBlock = JSON.parse(sessionStorage[shift[0]]);
-    let acceptorBlock = JSON.parse(sessionStorage[shift[1]]);
-
-    for (let key in donorBlock) {
-        if (donorBlock[key].id == elem) {
-            acceptorBlock.push(donorBlock[key]);
-
-            delete donorBlock[key];
-        } 
-    } 
-
-    sessionStorage[shift[0]] = JSON.stringify(donorBlock.filter(n => n));
-    sessionStorage[shift[1]] = JSON.stringify(acceptorBlock.filter(n => n));
-};
-
-export { setStorage, getStorage, updateStorage };
+export { setStorage, getStorage };

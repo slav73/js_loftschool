@@ -5,7 +5,7 @@ padding: 30px;
 width: 700px;
 }
 
-.source, .target {
+.sourceBlock, .targetBlock {
 display: flex;
 flex-basis: 50%;
 flex-wrap: wrap;
@@ -15,12 +15,12 @@ border: 3px dashed #b3b3b3;
 border-radius: 10px;
 }
 
-.source {
+.sourceBlock {
 border-top-right-radius: 0;
 border-bottom-right-radius: 0;
 }
 
-.target {
+.targetBlock {
 border-left: none;
 border-top-left-radius: 0;
 border-bottom-left-radius: 0;
